@@ -57,8 +57,8 @@ class Main:
         print(f"✅ ID успешно определён. ({category_id})\n")
 
     def start_bot(self):
-        confirm = input("⚙️ Бот успешно готов к запуску, если вы хотите запустить введите 1: ")
-        if confirm != "1":
+        _type = input("⚙️ Бот успешно готов к запуску.\nВыберите один из режимов работы (1 - фарм, 2 - умное оценивание):")
+        if _type not in ["1", "2"]:
             exit("⛔️ Запуск бота отменён.")
 
         start_from = ""
@@ -73,6 +73,21 @@ class Main:
                     continue  # Если мы не можем менять рейтинг
                 elif item.get('rating').get('rated') != 0:
                     continue  # Если рейтинг уже установлен
+
+                if _type == "1":
+                    try:
+                        self.vk_session.method("newsfeed.setPostVote",
+                                               {"owner_id": item['source_id'], "post_id": item['post_id'],
+                                                "new_vote": -1})
+                        print(
+                            f"➕ Записи https://vk.com/wall{item['source_id']}_{item['post_id']} была поставлена оценка.")
+                    except ApiError:
+                        print(
+                            f"⛔️ Не удалось оценить запись wall{item['source_id']}_{item['post_id']}. ({rate})\n\n⚙️ Делаю перерыв...\n")
+                        time.sleep(random.randint(300, 900))
+
+                    time.sleep(random.randint(int(config.sleep_time / 3), int(config.sleep_time)))
+                    continue
 
                 rate = 1
 
@@ -133,7 +148,7 @@ class Main:
                             f"🚷 Была отрицательно оценена запись https://vk.com/wall{item['source_id']}_{item['post_id']}. ({rate})")
                 except ApiError:
                     print(
-                        f"⛔️ Не удалось оценить запись wall{item['source_id']}_{item['post_id']}. ({rate})")
+                        f"⛔️ Не удалось оценить запись wall{item['source_id']}_{item['post_id']}. ({rate})\n\n⚙️ Делаю перерыв...\n")
                     time.sleep(random.randint(300, 900))
 
                 time.sleep(random.randint(int(config.sleep_time/3), int(config.sleep_time)))
