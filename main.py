@@ -83,7 +83,7 @@ class Main:
                             f"➕ Записи https://vk.com/wall{item['source_id']}_{item['post_id']} была поставлена оценка.")
                     except ApiError:
                         print(
-                            f"⛔️ Не удалось оценить запись wall{item['source_id']}_{item['post_id']}. ({rate})\n\n⚙️ Делаю перерыв...\n")
+                            f"⛔️ Не удалось оценить запись wall{item['source_id']}_{item['post_id']}.\n\n⚙️ Делаю перерыв...\n")
                         time.sleep(random.randint(300, 900))
 
                     time.sleep(random.randint(int(config.sleep_time / 3), int(config.sleep_time)))
